@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "Warmup schema",
+  "additionalProperties": false,
+  "properties": {
+    "ips": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "The IP addresses",
+      "items": {
+        "type": "object",
+        "required": [
+          "ip"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "helo": {
+            "type": "string"
+          },
+          "added": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "schedules": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "The schedules",
+      "items": {
+        "type": "object",
+        "required": [
+          "schedule"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "class": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "number",
+            "default": 3600
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "enum": ["jobid", "grouping", "tenantid", "localip", "remoteip", "transportid", "recipientdomain", "remotemx"]
+                    },
+                    {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "minProperties": 1,
+                        "maxProperties": 1,
+                        "properties": {
+                            "jobid": {
+                              "type": "string"
+                            },
+                            "grouping": {
+                              "type": "string"
+                            },
+                            "tenantid": {
+                              "type": "string"
+                            },
+                            "remoteip": {
+                              "type": "string"
+                            },
+                            "transportid": {
+                              "type": "string"
+                            },
+                            "recipientdomain": {
+                              "type": "string"
+                            },
+                            "remotemx": {
+                              "type": "string"
+                            }
+                        }
+                    }
+                ]
+            }
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "schedule": {
+            "type": "array",
+            "description": "The data",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "day",
+                "messages"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "day": {
+                  "type": "number"
+                },
+                "messages": {
+                  "type": "number"
+                },
+                "interval": {
+                  "type": "number"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
