@@ -1,10 +1,3 @@
-plugins:
-- config:
-    ips:
-    - added: '2021-03-10'
-      class: slow_warmup
-      ip: 10.1.1.1
-  id: warmup
 resolver:
   cache:
     size: 10000
@@ -24,8 +17,7 @@ scripting:
 
         Accept();
       id: default
-    predelivery: "Try(\n\t[\n\t\t\"sourceip\" => warmup_ips(),\n\t\t\"sourceip_random\"\
-      \ => false,\n\t]\n);"
+    predelivery: "Try();"
 servers:
 - id: default
   phases:

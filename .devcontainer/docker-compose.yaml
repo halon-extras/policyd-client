@@ -8,7 +8,7 @@ services:
         HALON_REPO_USER: ${HALON_REPO_USER}
         HALON_REPO_PASS: ${HALON_REPO_PASS}
     volumes:
-      - ../:/warmup
+      - ../:/policyd-client
       - ./smtpd/dist:/etc/halon
       - halon-spool:/var/spool/halon
 volumes:

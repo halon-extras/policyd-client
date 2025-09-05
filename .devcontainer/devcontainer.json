@@ -1,15 +1,19 @@
 {
-	"name": "warmup",
+	"name": "policyd-client",
 	"dockerComposeFile": [
 		"docker-compose.yaml"
 	],
-	"workspaceFolder": "/warmup",
+	"workspaceFolder": "/policyd-client",
 	"service": "halon-smtpd",
 	"overrideCommand": false,
-	"extensions": [
-		"Halon.vscode-halon",
-		"Halon.hsl-linter",
-		"Halon.hsl-debug",
-		"ms-vscode.cpptools"
-	]
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Halon.vscode-halon",
+				"Halon.hsl-linter",
+				"Halon.hsl-debug",
+				"ms-vscode.cpptools"
+			]
+		}
+	}
 }
