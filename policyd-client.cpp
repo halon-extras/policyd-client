@@ -239,6 +239,7 @@ static void websocketWorker()
 								root["policy"]["ttl"].isNumeric() ? root["policy"]["ttl"].asDouble() : 0											 // double ttl
 							);
 							error = _id == nullptr;
+							free(_id);
 						}
 						else
 						{
@@ -326,6 +327,7 @@ static void websocketWorker()
 								root["suspend"]["ttl"].isNumeric() ? root["suspend"]["ttl"].asDouble() : 0										 // double ttl
 							);
 							error = _id == nullptr;
+							free(_id);
 						}
 
 						for (auto& i : properties)
