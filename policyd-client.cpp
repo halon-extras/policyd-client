@@ -99,17 +99,21 @@ static void websocketWorker()
 		// connected
 		while (!stop)
 		{
+			std::string fullbuffer;
 			size_t rlen;
 			const struct curl_ws_frame* meta;
 			char buffer[65535];
+read_more:
 			res = curl_ws_recv(curl, buffer, sizeof(buffer), &rlen, &meta);
 			if (res == CURLE_OK)
 			{
-				buffer[rlen] = '\0';
+				fullbuffer.append(buffer, rlen);
+				if (meta->bytesleft)
+					goto read_more;
 
 				Json::Value root;
 				Json::Reader reader;
-				reader.parse(buffer, root);
+				reader.parse(fullbuffer, root);
 
 				if (root["action"].asString() == "VERSION")
 				{
