@@ -236,7 +236,7 @@ read_more:
 								ratealgorithm,																										 // int ratealgorithm
 								root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	 // double connectinterval,
 								root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				 // const char* tag,
-								&properties[0],																										 // const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																										 // const char* propv[],
 								properties.size(),																									 // size_t propl,
 								root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							 // bool stop,
 								root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						 // bool cluster,
@@ -261,7 +261,7 @@ read_more:
 								ratealgorithm,																										// int ratealgorithm
 								root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	// double connectinterval,
 								root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				// const char* tag,
-								&properties[0],																										// const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																										// const char* propv[],
 								properties.size(),																									// size_t propl,
 								root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							// bool stop,
 								root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						// bool cluster,
@@ -326,7 +326,7 @@ read_more:
 								root["suspend"]["grouping"].isString() ? root["suspend"]["grouping"].asString().c_str() : nullptr,				 // const char* grouping,
 								root["suspend"]["tenantid"].isString() ? root["suspend"]["tenantid"].asString().c_str() : nullptr,				 // const char*tenantidtransportid,
 								root["suspend"]["tag"].isString() ? root["suspend"]["tag"].asString().c_str() : nullptr,						 // const char* tag,
-								&properties[0],																									 // const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																									 // const char* propv[],
 								properties.size(),																								 // size_t propl,
 								root["suspend"]["ttl"].isNumeric() ? root["suspend"]["ttl"].asDouble() : 0										 // double ttl
 							);
@@ -388,7 +388,7 @@ read_more:
 						ratealgorithm,																										// int ratealgorithm
 						root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	// double connectinterval,
 						root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				// const char* tag,
-						&properties[0],																										// const char* propv[],
+						properties.size() ? &properties[0] : nullptr,																										// const char* propv[],
 						properties.size(),																									// size_t propl,
 						root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							// bool stop,
 						root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						// bool cluster,
