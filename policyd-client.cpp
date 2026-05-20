@@ -93,7 +93,7 @@ static void websocketWorker()
 			sleep(1);
 			continue;
 		}
-		syslog(LOG_CRIT, "connected");
+		syslog(LOG_INFO, "policyd-client: Connected");
 		error = false;
 
 		// connected
@@ -103,7 +103,7 @@ static void websocketWorker()
 			size_t rlen;
 			const struct curl_ws_frame* meta;
 			char buffer[65535];
-read_more:
+		read_more:
 			res = curl_ws_recv(curl, buffer, sizeof(buffer), &rlen, &meta);
 			if (res == CURLE_OK)
 			{
@@ -120,8 +120,9 @@ read_more:
 					if (root["version"].asUInt64() != 1)
 					{
 						syslog(LOG_CRIT, "policyd-client: Unsupported version of policyd");
+						stop = true;
 						error = true;
-						return;
+						break;
 					}
 				}
 				if (root["action"].asString() == "CREATE")
@@ -214,7 +215,7 @@ read_more:
 								}
 								else
 								{
-									syslog(LOG_CRIT, "policy of typ warmup was missing localip");
+									syslog(LOG_CRIT, "policyd-client: policy of typ warmup was missing localip");
 								}
 							}
 
@@ -236,7 +237,7 @@ read_more:
 								ratealgorithm,																										 // int ratealgorithm
 								root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	 // double connectinterval,
 								root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				 // const char* tag,
-								properties.size() ? &properties[0] : nullptr,																										 // const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																		 // const char* propv[],
 								properties.size(),																									 // size_t propl,
 								root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							 // bool stop,
 								root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						 // bool cluster,
@@ -261,7 +262,7 @@ read_more:
 								ratealgorithm,																										// int ratealgorithm
 								root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	// double connectinterval,
 								root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				// const char* tag,
-								properties.size() ? &properties[0] : nullptr,																										// const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																		// const char* propv[],
 								properties.size(),																									// size_t propl,
 								root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							// bool stop,
 								root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						// bool cluster,
@@ -311,7 +312,7 @@ read_more:
 								}
 								else
 								{
-									syslog(LOG_CRIT, "policy of typ warmup was missing localip");
+									syslog(LOG_CRIT, "policyd-client: policy of typ warmup was missing localip");
 								}
 							}
 
@@ -326,7 +327,7 @@ read_more:
 								root["suspend"]["grouping"].isString() ? root["suspend"]["grouping"].asString().c_str() : nullptr,				 // const char* grouping,
 								root["suspend"]["tenantid"].isString() ? root["suspend"]["tenantid"].asString().c_str() : nullptr,				 // const char*tenantidtransportid,
 								root["suspend"]["tag"].isString() ? root["suspend"]["tag"].asString().c_str() : nullptr,						 // const char* tag,
-								properties.size() ? &properties[0] : nullptr,																									 // const char* propv[],
+								properties.size() ? &properties[0] : nullptr,																	 // const char* propv[],
 								properties.size(),																								 // size_t propl,
 								root["suspend"]["ttl"].isNumeric() ? root["suspend"]["ttl"].asDouble() : 0										 // double ttl
 							);
@@ -388,7 +389,7 @@ read_more:
 						ratealgorithm,																										// int ratealgorithm
 						root["policy"]["then"]["connectinterval"].isNumeric() ? root["policy"]["then"]["connectinterval"].asDouble() : 0,	// double connectinterval,
 						root["policy"]["then"]["tag"].isString() ? root["policy"]["then"]["tag"].asString().c_str() : nullptr,				// const char* tag,
-						properties.size() ? &properties[0] : nullptr,																										// const char* propv[],
+						properties.size() ? &properties[0] : nullptr,																		// const char* propv[],
 						properties.size(),																									// size_t propl,
 						root["policy"]["then"]["stop"].isBool() ? root["policy"]["then"]["stop"].asBool() : false,							// bool stop,
 						root["policy"]["then"]["cluster"].isBool() ? root["policy"]["then"]["cluster"].asBool() : true,						// bool cluster,
@@ -518,6 +519,8 @@ bool Halon_init(HalonInitContext* hic)
 		usleep(100000);
 	if (error)
 	{
+		if (websocketThread.joinable())
+			websocketThread.join();
 		syslog(LOG_CRIT, "policyd-client: Failed to sync policies");
 		return false;
 	}
@@ -617,5 +620,6 @@ HALON_EXPORT
 void Halon_cleanup()
 {
 	stop = true;
-	websocketThread.join();
+	if (websocketThread.joinable())
+		websocketThread.join();
 }
