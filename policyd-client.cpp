@@ -469,6 +469,7 @@ static void websocketWorker()
 							}
 						}
 					}
+					uuid_last.clear();
 
 					if (error)
 						break;
@@ -489,7 +490,7 @@ static void websocketWorker()
 		}
 
 		// saving old rules...
-		uuid_last = uuid;
+		uuid_last.merge(uuid);
 		uuid.clear();
 
 		// closing...
