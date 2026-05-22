@@ -85,6 +85,8 @@ static void websocketWorker()
 
 		curl_easy_setopt(curl, CURLOPT_URL, Config.address.c_str());
 		curl_easy_setopt(curl, CURLOPT_CONNECT_ONLY, 2L);
+		curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
+		curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 300L);
 		CURLcode res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
 		{
