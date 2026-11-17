@@ -26,7 +26,8 @@ RUN cd /tmp/halon \
     && LD_LIBRARY_PATH=/usr/local/lib64 ./configure --without-libpsl --without-ssl --without-ldap \
     && make && make install
 RUN rm -rf /tmp/halon
-RUN dnf install -y jsoncpp-devel
+RUN dnf --enablerepo=crb install -y jsoncpp-devel \
+    && dnf clean all
 
 RUN echo -n "ROCKY10" > /OSRELEASE.txt
 
